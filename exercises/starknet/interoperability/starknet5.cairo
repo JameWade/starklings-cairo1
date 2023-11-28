@@ -2,7 +2,7 @@
 // Address all the TODOs to make the tests pass!
 // Execute `starklings hint starknet5` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+
 
 use core::traits::Into;
 use core::result::ResultTrait;
@@ -44,7 +44,16 @@ mod ContractA {
     impl ContractAImpl of super::IContractA<ContractState> {
         fn set_value(ref self: ContractState, value: u128) -> bool {
             // TODO: check if contract_b is enabled.
+            let contract_address  = self.contract_b.read();
+            IContractBDispatcher{contract_address }.enable();
+            let is_enable = IContractBDispatcher{contract_address }.is_enabled();
             // If it is, set the value and return true. Otherwise, return false.
+            if is_enable{
+                self.value.write(value);
+                true
+            }else{
+                false
+            }
         }
 
         fn get_value(self: @ContractState) -> u128 {
